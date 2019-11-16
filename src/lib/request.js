@@ -2,7 +2,7 @@ import axios from 'axios';
 import config from '../config';
 
 export const request = (opts = {}, optsHeader = {}) => {
-  const token = localStorage.getItem('access_token');
+  const token = ""; //localStorage.getItem('access_token');
   const defaultOptions = {
     ...opts,
     headers: !token

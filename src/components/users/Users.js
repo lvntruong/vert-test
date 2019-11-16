@@ -10,7 +10,7 @@ import {
   TableRow,
   TableRowColumn
 } from "material-ui/Table";
-import { RaisedButton, LinearProgress } from "material-ui";
+import { RaisedButton } from "material-ui";
 import FontIcon from "material-ui/FontIcon";
 import FloatingActionButton from "material-ui/FloatingActionButton";
 import ContentEdit from "material-ui/svg-icons/editor/mode-edit";
@@ -19,9 +19,9 @@ import ContentView from "material-ui/svg-icons/image/remove-red-eye";
 import ModalUser from "./modalUser";
 import {
   updateUser,
-  deleteUser,
   deleteMultipleUser,
-  deleteAllUser
+  deleteAllUser,
+  getAllUser
 } from "../../actions/user.actions";
 import { addSnackBar } from "../../actions/ui.actions";
 
@@ -31,6 +31,10 @@ class Users extends Component {
     openDialogType: "",
     currentUserSelected: null
   };
+
+  componentWillMount() {
+    getAllUser();
+  }
 
   handleToggle = value => {
     this.setState({
@@ -49,7 +53,7 @@ class Users extends Component {
         break;
       case "delete":
         addSnackBar("Deleting...");
-        deleteUser(row).then(() => {
+        deleteMultipleUser([row.id]).then(() => {
           this.handleSuccess();
           this.setState({ userSelected: [] });
         });

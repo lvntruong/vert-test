@@ -7,10 +7,11 @@ import {
   USER_DELETE_MULTIPLE,
   USER_DELETE_ALL
 } from "./types";
-import request from "../lib/request";
 import store from "../store";
+import axios from "axios";
 
-const FAKE_ENDPOINT_GET_USERS = "https://jsonplaceholder.typicode.com/users/";
+export const FAKE_ENDPOINT_GET_USERS =
+  "https://jsonplaceholder.typicode.com/users/";
 
 // import config from '../config';
 // import store from '../store';
@@ -63,15 +64,9 @@ export function getCurrentUser() {
 }
 
 export const getAllUser = () => {
-  const users = JSON.parse(localStorage.getItem("users"));
-  if (users && users.length) {
-    store.dispatch({
-      type: USERS_ADD_LIST,
-      payload: users
-    });
-  } else {
-    request()
-      .get(FAKE_ENDPOINT_GET_USERS, {})
+  return new Promise((resolve, reject) => {
+    axios
+      .get(FAKE_ENDPOINT_GET_USERS)
       .then(response => {
         if (response.status === 200) {
           const { data = [] } = response;
@@ -79,40 +74,33 @@ export const getAllUser = () => {
             type: USERS_ADD_LIST,
             payload: data
           });
+          resolve(data);
         }
-      });
-  }
+      })
+      .catch(e => reject(e));
+  });
 };
 
 export const updateUser = user => {
-  return request()
-    .patch(`${FAKE_ENDPOINT_GET_USERS}/${user.id}`, user)
-    .then(response => {
-      if (response.status === 200) {
-        const { data = [] } = response;
-        store.dispatch({
-          type: USER_UPDATE,
-          payload: data
-        });
-      }
-    });
-};
-
-export const deleteUser = user => {
-  return request()
-    .delete(`${FAKE_ENDPOINT_GET_USERS}/${user.id}`, {})
-    .then(response => {
-      if (response.status === 200) {
-        store.dispatch({
-          type: USER_DELETE_MULTIPLE,
-          payload: [user.id]
-        });
-      }
-    });
+  return new Promise((resolve, reject) => {
+    axios
+      .patch(`${FAKE_ENDPOINT_GET_USERS}/${user.id}`, user)
+      .then(response => {
+        if (response.status === 200) {
+          const { data = [] } = response;
+          store.dispatch({
+            type: USER_UPDATE,
+            payload: data
+          });
+          resolve(data);
+        }
+      })
+      .catch(e => reject(e));
+  });
 };
 
 export const deleteMultipleUser = arUserId => {
-  return request()
+  return axios
     .delete(`${FAKE_ENDPOINT_GET_USERS}/${arUserId.join(",")}`, {}) // this if fake for delete multiple user by Id
     .then(response => {
       if (response.status === 200) {
@@ -125,7 +113,7 @@ export const deleteMultipleUser = arUserId => {
 };
 
 export const deleteAllUser = () => {
-  return request()
+  return axios
     .delete(`${FAKE_ENDPOINT_GET_USERS}/0`, {}) // this if fake for delete all user
     .then(response => {
       if (response.status === 200) {
