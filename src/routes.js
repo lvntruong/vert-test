@@ -7,10 +7,9 @@ import { getCurrentUser } from './actions/user.actions';
 
 import requireAuth from './lib/requireAuth';
 // import waitingForAuth from './lib/waitingForAuth';
-import store from './store';
 
 export default (
-  <Route path="/" component={Layout} onEnter={store.dispatch(getCurrentUser())}>
+  <Route path="/" component={Layout} onEnter={getCurrentUser()}>
     <IndexRoute component={requireAuth(Landing)} />
   </Route>
 );
