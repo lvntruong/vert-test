@@ -2,7 +2,7 @@ import { UI_ADD_SNACKBAR } from "../actions/types";
 
 const initialState = {
   snackBar: {
-    duration: 10000,
+    duration: 4000,
     text: null
   }
 };

@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import Snackbar from "material-ui/Snackbar";
 
-class SnackbarComponent extends React.Component {
+export class SnackbarComponent extends React.Component {
  
   render() {
     const { duration, text } = this.props.snackBar;
