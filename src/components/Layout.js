@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import { Grid, Row, Col } from 'react-flexbox-grid';
+import SnackBar from '../components/common/SnackBar';
 
 import Header from './Layout/Header';
 import Footer from './Layout/Footer';
@@ -15,25 +16,28 @@ class Layout extends Component {
         };
 
         return (
-            <main role="main">
-                <Grid fluid className="grid">
-                    <Header clientSettings={clientSettings} />
-                    <section className="main-content">
-                        <Row center="xs">
-                            <Col xs={12}>
-                                {this.props.children}
-                            </Col>
-                        </Row>
-                    </section>
-                    <section className="footer">
-                        <Row center="xs">
-                            <Col xs={12}>
-                                <Footer />
-                            </Col>
-                        </Row>
-                    </section>
-                </Grid>
-            </main>
+            <React.Fragment>
+                <SnackBar />
+                <main role="main">
+                    <Grid fluid className="grid">
+                        <Header clientSettings={clientSettings} />
+                        <section className="main-content">
+                            <Row center="xs">
+                                <Col xs={12}>
+                                    {this.props.children}
+                                </Col>
+                            </Row>
+                        </section>
+                        <section className="footer">
+                            <Row center="xs">
+                                <Col xs={12}>
+                                    <Footer />
+                                </Col>
+                            </Row>
+                        </section>
+                    </Grid>
+                </main>
+            </React.Fragment>
         );
     }
 }

@@ -1,7 +1,11 @@
 import {
   USER_CURRENT_PENDING,
   USER_CURRENT_FULFILLED,
-  USERS_ADD_LIST
+  USERS_ADD_LIST,
+  USER_UPDATE,
+  USER_DELETE,
+  USER_DELETE_MULTIPLE,
+  USER_DELETE_ALL
 } from "./types";
 import request from "../lib/request";
 import store from "../store";
@@ -59,14 +63,74 @@ export function getCurrentUser() {
 }
 
 export const getAllUser = () => {
-  request()
-    .get(FAKE_ENDPOINT_GET_USERS, {})
+  const users = JSON.parse(localStorage.getItem("users"));
+  if (users && users.length) {
+    store.dispatch({
+      type: USERS_ADD_LIST,
+      payload: users
+    });
+  } else {
+    request()
+      .get(FAKE_ENDPOINT_GET_USERS, {})
+      .then(response => {
+        if (response.status === 200) {
+          const { data = [] } = response;
+          store.dispatch({
+            type: USERS_ADD_LIST,
+            payload: data
+          });
+        }
+      });
+  }
+};
+
+export const updateUser = user => {
+  return request()
+    .patch(`${FAKE_ENDPOINT_GET_USERS}/${user.id}`, user)
     .then(response => {
       if (response.status === 200) {
         const { data = [] } = response;
         store.dispatch({
-          type: USERS_ADD_LIST,
+          type: USER_UPDATE,
           payload: data
+        });
+      }
+    });
+};
+
+export const deleteUser = user => {
+  return request()
+    .delete(`${FAKE_ENDPOINT_GET_USERS}/${user.id}`, {})
+    .then(response => {
+      if (response.status === 200) {
+        store.dispatch({
+          type: USER_DELETE_MULTIPLE,
+          payload: [user.id]
+        });
+      }
+    });
+};
+
+export const deleteMultipleUser = arUserId => {
+  return request()
+    .delete(`${FAKE_ENDPOINT_GET_USERS}/${arUserId.join(",")}`, {}) // this if fake for delete multiple user by Id
+    .then(response => {
+      if (response.status === 200) {
+        store.dispatch({
+          type: USER_DELETE_MULTIPLE,
+          payload: arUserId
+        });
+      }
+    });
+};
+
+export const deleteAllUser = () => {
+  return request()
+    .delete(`${FAKE_ENDPOINT_GET_USERS}/0`, {}) // this if fake for delete all user
+    .then(response => {
+      if (response.status === 200) {
+        store.dispatch({
+          type: USER_DELETE_ALL
         });
       }
     });
